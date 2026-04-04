@@ -1,5 +1,7 @@
 package com.gameportal.service;
 
+import com.gameportal.dto.GameDto;
+import com.gameportal.mapper.GameMapper;
 import com.gameportal.model.Game;
 import com.gameportal.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +14,18 @@ import java.util.List;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final GameMapper gameMapper;
 
-    public List<Game> getAllGames() {
-        return gameRepository.findAll();
+    public List<GameDto> getAllGames() {
+        return gameRepository.findAll()
+                .stream()
+                .map(gameMapper::toDto)
+                .toList();
     }
 
-    public Game getGameById(Long id) {
-        return gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found with id: " + id));
+    public GameDto getGameById(Long id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Game not found with id: " + id));
+        return gameMapper.toDto(game);
     }
 }
