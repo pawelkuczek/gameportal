@@ -38,4 +38,10 @@ public class GameController {
     public ResponseEntity<GameDto> updateGame(@PathVariable Long id, @RequestBody @Valid UpdateGameRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(gameService.updateGame(id, request));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGame(@PathVariable Long id) {
+        gameService.deleteGame(id);
+        return ResponseEntity.noContent().build();
+    }
 }

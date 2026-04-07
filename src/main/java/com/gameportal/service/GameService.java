@@ -74,4 +74,10 @@ public class GameService {
 
         return gameMapper.toDto(gameRepository.save(game));
     }
+
+    public void deleteGame(Long id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new GameNotFoundException(id));
+        gameRepository.delete(game);
+    }
 }
