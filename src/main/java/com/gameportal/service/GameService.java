@@ -2,6 +2,7 @@ package com.gameportal.service;
 
 import com.gameportal.dto.CreateGameRequest;
 import com.gameportal.dto.GameDto;
+import com.gameportal.dto.UpdateGameRequest;
 import com.gameportal.exception.GameNotFoundException;
 import com.gameportal.mapper.GameMapper;
 import com.gameportal.model.Game;
@@ -27,7 +28,7 @@ public class GameService {
 
     public GameDto getGameById(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(()-> new GameNotFoundException(id));
+                .orElseThrow(() -> new GameNotFoundException(id));
         return gameMapper.toDto(game);
     }
 
@@ -40,7 +41,37 @@ public class GameService {
         game.setReleaseYear(request.getReleaseYear());
         game.setImageUrl(request.getImageUrl());
 
-        Game savedGame = gameRepository.save(game);
-        return gameMapper.toDto(savedGame);
+        return gameMapper.toDto(gameRepository.save(game));
+    }
+
+    public GameDto updateGame(Long id, UpdateGameRequest request) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new GameNotFoundException(id));
+
+        if (request.getTitle() != null) {
+            game.setTitle(request.getTitle());
+        }
+
+        if (request.getDescription() != null) {
+            game.setDescription(request.getDescription());
+        }
+
+        if (request.getGenre() != null) {
+            game.setGenre(request.getGenre());
+        }
+
+        if (request.getPlatform() != null) {
+            game.setPlatform(request.getPlatform());
+        }
+
+        if (request.getReleaseYear() != null) {
+            game.setReleaseYear(request.getReleaseYear());
+        }
+
+        if (request.getImageUrl() != null) {
+            game.setImageUrl(request.getImageUrl());
+        }
+
+        return gameMapper.toDto(gameRepository.save(game));
     }
 }
