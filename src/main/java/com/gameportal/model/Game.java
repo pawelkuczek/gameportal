@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "games")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Game {
@@ -16,8 +17,10 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(length = 1000)
     private String description;
 
     private String genre;
@@ -28,6 +31,7 @@ public class Game {
 
     private Double averageRating;
 
+    @Column(length = 500)
     private String imageUrl;
 
     @Column(nullable = false, updatable = false)

@@ -7,9 +7,9 @@ import com.gameportal.exception.GameNotFoundException;
 import com.gameportal.mapper.GameMapper;
 import com.gameportal.model.Game;
 import com.gameportal.repository.GameRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -19,6 +19,7 @@ public class GameService {
     private final GameRepository gameRepository;
     private final GameMapper gameMapper;
 
+    @Transactional(readOnly = true)
     public List<GameDto> getAllGames() {
         return gameRepository.findAll()
                 .stream()
@@ -26,24 +27,27 @@ public class GameService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public GameDto getGameById(Long id) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new GameNotFoundException(id));
         return gameMapper.toDto(game);
     }
 
+    @Transactional
     public GameDto createGame(CreateGameRequest request) {
-        Game game = new Game();
-        game.setTitle(request.getTitle());
-        game.setDescription(request.getDescription());
-        game.setGenre(request.getGenre());
-        game.setPlatform(request.getPlatform());
-        game.setReleaseYear(request.getReleaseYear());
-        game.setImageUrl(request.getImageUrl());
-
+        Game game = Game.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .genre(request.getGenre())
+                .platform(request.getPlatform())
+                .releaseYear(request.getReleaseYear())
+                .imageUrl(request.getImageUrl())
+                .build();
         return gameMapper.toDto(gameRepository.save(game));
     }
 
+    @Transactional
     public GameDto updateGame(Long id, UpdateGameRequest request) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new GameNotFoundException(id));
@@ -75,6 +79,7 @@ public class GameService {
         return gameMapper.toDto(gameRepository.save(game));
     }
 
+    @Transactional
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new GameNotFoundException(id));
