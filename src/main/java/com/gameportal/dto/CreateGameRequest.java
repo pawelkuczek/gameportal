@@ -21,7 +21,7 @@ public class CreateGameRequest {
 
     @NotNull(message = "Release year is required")
     @Min(value = 1958, message = "Release year must be 1958 or later")
-    @Max(value = 2030, message = "Release year must be 1958 or later")
+    @Max(value = 2030, message = "Release year must be 2030 or earlier")
     private Integer releaseYear;
 
     @Size(max = 500, message = "Image URL cannot exceed 500 characters")
