@@ -2,15 +2,20 @@ package com.gameportal.service;
 
 import com.gameportal.dto.CreateGameRequest;
 import com.gameportal.dto.GameDto;
+import com.gameportal.dto.PagedResponse;
 import com.gameportal.dto.UpdateGameRequest;
 import com.gameportal.exception.GameNotFoundException;
 import com.gameportal.mapper.GameMapper;
 import com.gameportal.model.Game;
 import com.gameportal.repository.GameRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,11 +25,19 @@ public class GameService {
     private final GameMapper gameMapper;
 
     @Transactional(readOnly = true)
-    public List<GameDto> getAllGames() {
-        return gameRepository.findAll()
-                .stream()
-                .map(gameMapper::toDto)
-                .toList();
+    public PagedResponse<GameDto> getAllGames(Pageable pageable) {
+        Page<Game> page = gameRepository.findAll(pageable);
+
+       return PagedResponse.<GameDto>builder()
+               .content(page.getContent().stream().map(gameMapper::toDto).toList())
+               .pageNumber(page.getNumber())
+               .pageSize(page.getSize())
+               .totalElements(page.getTotalElements())
+               .totalPages(page.getTotalPages())
+               .first(page.isFirst())
+               .last(page.isLast())
+               .build();
+
     }
 
     @Transactional(readOnly = true)

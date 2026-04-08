@@ -1,6 +1,7 @@
 package com.gameportal.controller;
 
 import com.gameportal.dto.GameDto;
+import com.gameportal.dto.PagedResponse;
 import com.gameportal.dto.UpdateGameRequest;
 import com.gameportal.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,11 +11,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import com.gameportal.dto.CreateGameRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/games")
@@ -30,8 +31,8 @@ public class GameController {
             description = "Returns a list of all games in the database"
     )
     @ApiResponse(responseCode = "200", description = "Showing all games or empty list if there are no games")
-    public ResponseEntity<List<GameDto>> getAllGames() {
-        return ResponseEntity.ok(gameService.getAllGames());
+    public ResponseEntity<PagedResponse<GameDto>> getAllGames(@PageableDefault(size = 10, sort = "title") Pageable pageable) {
+        return ResponseEntity.ok(gameService.getAllGames(pageable));
     }
 
     @GetMapping("/{id}")
