@@ -4,9 +4,6 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.context.annotation.Configuration;
-import org.springdoc.core.customizers.OpenApiCustomizer;
-import io.swagger.v3.oas.models.parameters.Parameter;
-import org.springframework.context.annotation.Bean;
 
 @Configuration
 @OpenAPIDefinition(
@@ -20,13 +17,4 @@ import org.springframework.context.annotation.Bean;
                 )
         )
 )
-public class OpenApiConfig {
-    @Bean
-    public OpenApiCustomizer pageableCustomizer() {
-        return openApi -> openApi.getComponents()
-                .addParameters("pageable", new Parameter()
-                        .in("query")
-                        .name("pageable")
-                        .required(false));
-    }
-}
+public class OpenApiConfig {}
