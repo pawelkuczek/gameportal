@@ -32,8 +32,12 @@ public class GameController {
             description = "Returns a list of all games in the database"
     )
     @ApiResponse(responseCode = "200", description = "Showing all games or empty list if there are no games")
-    public ResponseEntity<PagedResponse<GameDto>> getAllGames(@ParameterObject @PageableDefault(size = 10, sort = "title") Pageable pageable) {
-        return ResponseEntity.ok(gameService.getAllGames(pageable));
+    public ResponseEntity<PagedResponse<GameDto>> getAllGames(@RequestParam(required = false) String title,
+                                                              @RequestParam(required = false) String genre,
+                                                              @RequestParam(required = false) String platform,
+                                                              @RequestParam(required = false) Integer releaseYear,
+                                                              @ParameterObject @PageableDefault(size = 10, sort = "title") Pageable pageable) {
+        return ResponseEntity.ok(gameService.getAllGames(title, genre, platform, releaseYear, pageable));
     }
 
     @GetMapping("/{id}")
